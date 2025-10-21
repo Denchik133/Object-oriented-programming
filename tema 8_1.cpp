@@ -1,4 +1,4 @@
-﻿#include <iostream>
+#include <iostream>
 
 using namespace std;
 
@@ -44,8 +44,64 @@ public:
 		complexNumber s(newR * cos(newPhi), newR * sin(newPhi));
 		return { s, complexNumber(s.real * -1, s.imaginary * -1) };
 	}
+    void input(string label = "") {
+        cout << label;
+        cout << "Введіть дійсну частину: ";
+        cin >> real;
+        cout << "Введіть уявну частину: ";
+        cin >> imaginary;
+    }
+    void print(string label = "") const {
+        cout << label;
+        if (imaginary >= 0)
+            cout << real << " + " << imaginary << "i";
+        else
+            cout << real << " - " << -imaginary << "i";
+        cout << endl;
+    }
 };
 
 int main() {
+    complexNumber a, b;
+    cout << "===== Введення комплексних чисел =====";
+    a.input("Перше число (a):");
+    b.input("\nДруге число (b):");
 
+    cout << "\n===== Результати обчислень =====";
+    a.print("a = ");
+    b.print("b = ");
+
+    cout << "\n--- Додавання ---";
+    (a + b).print("a + b = ");
+
+    cout << "\n--- Віднімання ---";
+    (a - b).print("a - b = ");
+
+    cout << "\n--- Множення ---";
+    (a * b).print("a * b = ");
+
+    cout << "\n--- Ділення ---";
+    (a / b).print("a / b = ");
+
+    cout << "\n--- Комплексне спряження ---";
+    a.conjugated().print("a = ");
+
+    double n;
+    cout << "\nВведіть степінь, у яку піднести a: ";
+    cin >> n;
+    cout << endl;
+    try {
+        a.pol(n).print("a^n = ");
+    }
+    catch (const exception& e) {
+        cout << "Помилка: " << e.what() << endl;
+    }
+
+    cout << "\n--- Квадратний корінь з a ---" << endl;
+    auto roots = a.complexSqrt();
+    roots.first.print("√a (1) = ");
+    roots.second.print("√a (2) = ");
+
+    cout << "\n============================================" << endl;
+    return 0;
 }
