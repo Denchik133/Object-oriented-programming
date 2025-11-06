@@ -37,8 +37,12 @@ float f1 = StrToFloat(Edit1 ->Text);
 float f2 = StrToFloat(Edit2 ->Text);
 float f3 = StrToFloat(Edit3 ->Text);
 float f4;
-if (RadioButton1 -> Checked) f4 = f1* f3;
-else f4 = f2*f3;
+if (RadioButton1 -> Checked){
+	f4 = f1* f3;
+}
+else {
+	f4 = f2*f3;
+}
 Edit4 -> Text = FloatToStr(f4);
 }
 //---------------------------------------------------------------------------
@@ -64,4 +68,5 @@ RadioButton2 -> Checked = false;
 }
 }
 //---------------------------------------------------------------------------
+
 
