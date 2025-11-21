@@ -1,6 +1,5 @@
 #include <iostream>
 #include <string>
-
 using namespace std;
 
 int exe(int acc, const string& op, int value);
@@ -117,7 +116,7 @@ public:
     Employer(const Person&, size_t, const Person&);
     ~Employer();
     size_t volume() const { return _volume; }
-    void hire(const Person&, const Position&);
+    void hire(const Person&, const Position&, size_t posNumber);
     void fire(size_t);
     void pay() const;
 };
@@ -172,41 +171,38 @@ Employer::~Employer() {
     delete _accountant;
 }
 
-void Employer::hire(const Person& person, const Position& position) {
-
-    size_t i = 0;
+void Employer::hire(const Person& person, const Position& position, size_t posNumber) {
+size_t i = 0;
     while(i < _volume && !_office[i]._free) i++;
 
     if(i == _volume) {
-        cout << "No vacant positions! Cannot hire "
-             << person.getName() << endl;
+        cout << "No vacant positions! Cannot hire " << person.getName() << endl;
         return;
     }
 
     Employee* pemployee = new Employee(person, position);
-
     _office[i]._free = false;
     _office[i]._pemployee = pemployee;
 
     cout << "Hired " << person.getName()
          << " as " << position.getPositionName()
-         << " at slot " << i << endl;
+         << " at position " << posNumber << endl;
 }
 
 void Employer::fire(size_t i) {
     if(i >= _volume) {
-        cout << "Invalid index for fire(): " << i << endl;
+        cout << "Invalid index for fire(): " << i + 1 << endl;
         return;
     }
 
     if(_office[i]._free) {
-        cout << "Position " << i << " already empty!" << endl;
+        cout << "Position " << i + 1 << " already empty!" << endl;
         return;
     }
 
     cout << "Firing " << _office[i]._pemployee->who().getName()
-         << " from " << _office[i]._pemployee->what().getPositionName()
-         << endl;
+    << " from " << _office[i]._pemployee->what().getPositionName()
+    << " at slot " << i + 1 << endl;
 
     delete _office[i]._pemployee;
     _office[i]._pemployee = nullptr;
@@ -245,7 +241,7 @@ int exe(int acc, const string& op, int value) {
 
 
 int main() {
-    cout << "=== Create Employer ===\n";
+    cout << "--- Create Employer ---\n";
 
     string bossName;
     cout << "Enter boss name: ";
@@ -263,14 +259,14 @@ int main() {
 
     Employer employer(boss, volume, accountantPerson);
 
-    cout << "\n=== Create Positions ===\n";
+    cout << "\n--- Create Positions ---\n";
     vector<Position*> positions;
 
-    for (size_t i = 1; i < volume; i++) {
+    for (size_t i = 0; i < volume; i++) {
         string posName;
         unsigned int salary;
 
-        cout << "Position #" << i << " name: ";
+        cout << "Position №" << i + 1 << " name: ";
         cin >> posName;
 
         cout << "Salary: ";
@@ -279,7 +275,7 @@ int main() {
         positions.push_back(new Position((char*)posName.c_str(), salary));
     }
 
-    cout << "\n=== MENU ===\n";
+    cout << "\n--- MENU ---\n";
     cout << "1 – Hire\n";
     cout << "2 – Fire\n";
     cout << "3 – Pay\n";
@@ -303,23 +299,29 @@ int main() {
             cout << "Enter employee name: ";
             cin >> name;
 
-            cout << "Choose position index (0 - " << positions.size() - 1 << "): ";
+            cout << "Choose position index (1 - " << positions.size() << "): ";
             cin >> posIndex;
 
-            if (posIndex >= positions.size()) {
+            if (posIndex < 1 || posIndex > positions.size()) {
                 cout << "Invalid position!\n";
                 continue;
             }
 
             Person* p = new Person(name.c_str());
-            employer.hire(*p, *positions[posIndex]);
+            employer.hire(*p, *positions[posIndex - 1], posIndex);
         }
 
         else if (choice == 2) {
             size_t idx;
-            cout << "Enter position index to fire: ";
+            cout << "Enter position index to fire (1 - " << positions.size() << "): ";
             cin >> idx;
-            employer.fire(idx);
+
+            if (idx < 1 || idx > positions.size()) {
+                cout << "Invalid index!\n";
+                continue;
+            }
+
+            employer.fire(idx - 1);
         }
 
         else if (choice == 3) {
