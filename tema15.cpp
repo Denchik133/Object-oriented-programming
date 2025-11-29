@@ -65,6 +65,7 @@ public:
 };
 
 int main() {
+    while (true) {
     Building* buildings[2];
     string addr;
     int fl, cr;
@@ -72,14 +73,29 @@ int main() {
     getline(cin, addr);
     cout << "Введіть кількість поверхів: ";
     cin >> fl;
+    if (fl <= 0) {
+        cout << "Кількість поверхів не може бути від'ємною. Спробуйте ще раз.\n";
+        cin.ignore();
+        continue;
+    }
     buildings[0] = new Building(addr, fl);
     cin.ignore();
     cout << "\nВведіть адресу навчального корпусу: ";
     getline(cin, addr);
     cout << "Введіть кількість поверхів: ";
     cin >> fl;
+    if (fl <= 0) {
+        cout << "Кількість поверхів не може бути від'ємною. Спробуйте ще раз.\n";
+        cin.ignore();
+        continue;
+    }
     cout << "Введіть кількість кабінетів: ";
     cin >> cr;
+    if (cr < 0) {
+        cout << "Кількість кабінетів не може бути від'ємною. Спробуйте ще раз.\n";
+        cin.ignore();
+        continue;
+    }
     buildings[1] = new EducationalBuilding(addr, fl, cr);
     cout << "\n--- Дані про будівлі ---\n";
     for (int i = 0; i < 2; i++) {
@@ -97,6 +113,11 @@ int main() {
     cin >> brand;
     cout << "Введіть ємність батареї: ";
     cin >> battery;
+    if (battery < 0) {
+        cout << "Ємність батареї не може бути від'ємною. Спробуйте ще раз.\n";
+        cin.ignore();
+        continue;
+    }
     devices[1] = new MobilePhone(brand, battery);
     cout << "\n--- Дані про пристрої ---\n";
     for (int i = 0; i < 2; i++) {
@@ -106,64 +127,63 @@ int main() {
     }
     cout << "\n--- Тест діапазону ---\n";
     int choice, size;
-    while (true) {
-        cout << "Введіть розмір масиву (щоб вийти введіть 0): ";
-        cin >> size;
-        if (size == 0) break;
-        else if (size < 0) {
-        cout << "Розмір масиву повинен бути додатнім. Спробуйте ще раз.\n";
-        continue;
-        }
-        cout << "Оберіть тип даних масиву:\n1 - int\n2 - double\nВаш вибір: ";
-        cin >> choice;
-        if (choice != 1 && choice != 2) {
-        cout << "Невірний вибір типу даних.\n";
-        continue;
-        }
-        else if (choice == 1) {
-        int* array = new int[size];
-        if (size >= 1 && size <= 4){
-            cout << "Введіть " << size << " елементи типу int:\n";
-        }
-        else {
-            cout << "Введіть " << size << " елементів типу int:\n";
-        }
-        for (int i = 0; i < size; i++) cin >> array[i];
-        int low, high;
-        cout << "Нижня межа: ";
-        cin >> low;
-        cout << "Верхня межа: ";
-        cin >> high;
-        if (low > high) {
-            cout << "Нижня межа не може бути більшою за верхню. Спробуйте ще раз.\n";
-            delete[] array;
-            continue;
-        }
-        findInRange(array, size, low, high);
+    cout << "Введіть розмір масиву (щоб вийти введіть 0): ";
+    cin >> size;
+    if (size == 0) break;
+    else if (size < 0) {
+    cout << "Розмір масиву повинен бути додатнім. Спробуйте ще раз.\n";
+    continue;
+    }
+    cout << "Оберіть тип даних масиву:\n1 - int\n2 - double\nВаш вибір: ";
+    cin >> choice;
+    if (choice != 1 && choice != 2) {
+    cout << "Невірний вибір типу даних.\n";
+    continue;
+    }
+    else if (choice == 1) {
+    int* array = new int[size];
+    if (size >= 1 && size <= 4) {
+        cout << "Введіть " << size << " елементи типу int:\n";
+    }
+    else {
+        cout << "Введіть " << size << " елементів типу int:\n";
+    }
+    for (int i = 0; i < size; i++) cin >> array[i];
+    int low, high;
+    cout << "Нижня межа: ";
+    cin >> low;
+    cout << "Верхня межа: ";
+    cin >> high;
+    if (low > high) {
+        cout << "Нижня межа не може бути більшою за верхню. Спробуйте ще раз.\n";
         delete[] array;
-        }
-        else {
-        double* array = new double[size];
-        if (size >= 1 && size <= 4){
-            cout << "Введіть " << size << " елементи типу double:\n";
-        }
-        else {
-            cout << "Введіть " << size << " елементів типу double:\n";
-        }
-        for (int i = 0; i < size; i++) cin >> array[i];
-        double low, high;
-        cout << "Нижня межа: ";
-        cin >> low;
-        cout << "Верхня межа: ";
-        cin >> high;
-        if (low > high) {
-            cout << "Нижня межа не може бути більшою за верхню. Спробуйте ще раз.\n";
-            delete[] array;
-            continue;
-        }
-        findInRange(array, size, low, high);
+        continue;
+    }
+    findInRange(array, size, low, high);
+    delete[] array;
+    }
+    else {
+    double* array = new double[size];
+    if (size >= 1 && size <= 4){
+        cout << "Введіть " << size << " елементи типу double:\n";
+    }
+    else {
+        cout << "Введіть " << size << " елементів типу double:\n";
+    }
+    for (int i = 0; i < size; i++) cin >> array[i];
+    double low, high;
+    cout << "Нижня межа: ";
+    cin >> low;
+    cout << "Верхня межа: ";
+    cin >> high;
+    if (low > high) {
+        cout << "Нижня межа не може бути більшою за верхню. Спробуйте ще раз.\n";
         delete[] array;
-        }
+        continue;
+    }
+    findInRange(array, size, low, high);
+    delete[] array;
+    }
     }
     cout << "\n--- Пара значень ---\n";
     int a;
