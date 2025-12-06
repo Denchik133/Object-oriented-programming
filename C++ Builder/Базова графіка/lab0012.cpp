@@ -210,3 +210,72 @@ Image7->Canvas->FloodFill(X,Y,clWhite,fsSurface);
 break; }
 }
 //---------------------------------------------------------------------------
+
+void changeBrushColor(TCanvas* canvas, double intensity){
+canvas->Brush->Color=TColor(RGB(15, 35, 60 + (int) (190 * intensity)));
+}
+
+void __fastcall TForm1::Button9Click(TObject *Sender)
+{
+UnicodeString text = Memo1->Text.UpperCase();
+int frequency[26] = {0};
+int countOfSymbols = 0;
+for (int i = 1; i <= text.Length(); i++) {
+wchar_t c = text[i];
+if (c >= 'A' && c <= 'Z') {
+int index = c - 'A';
+frequency[index]++;
+countOfSymbols++;
+}
+}
+TCanvas* canvas = Image8->Canvas;
+int w, h;
+w = Image8->Width;
+h = Image8->Height;
+canvas->Brush->Color = clWhite;
+canvas->FillRect(TRect(0, 0, w, h));
+if (countOfSymbols == 0) {
+
+}
+int lmargin, rmargin, bottomMargin, topMargin;
+lmargin = rmargin = bottomMargin = topMargin = 20;
+int plotWidth, plotHeight;
+plotWidth = w - lmargin - rmargin;
+plotHeight = h - bottomMargin - topMargin;
+if (plotWidth <= 0 || bottomMargin <= 0) {
+return;
+}
+double barWidth = plotWidth / 26.0;
+canvas->Pen->Color = clBlack;
+canvas->MoveTo(lmargin, topMargin);
+canvas->LineTo(lmargin, topMargin + plotHeight);
+canvas->LineTo(lmargin + plotWidth, topMargin + plotHeight);
+int maxFrequency = 0;
+for (int i = 0; i < 26; i++) {
+if (frequency[i] > maxFrequency) {
+maxFrequency = frequency[i];
+}
+for (int j = 0; j <26; j++) {
+if (frequency[j] == 0) {
+continue;
+}
+double ratio = frequency[j] / (double) maxFrequency;
+int columnHeight = (int) (ratio * plotHeight);
+int x1, x2, y1, y2;
+x1 = lmargin + (int) (j * barWidth) + 1;
+x2 = lmargin + (int) ((j + 1) * barWidth) - 1;
+y2 = topMargin + plotHeight;
+y1 = y2 - columnHeight;
+changeBrushColor(canvas, ratio);
+canvas->Rectangle(x1, y1, x2, y2);
+char c = (char) ('A' + j);
+int labelWidth = canvas->TextWidth(c);
+int textX, textY;
+textX = x1 + labelWidth / 2;
+textY = y2;
+canvas->Brush->Color = clGray;
+canvas->TextOut(textX, textY, c);
+}
+}
+}
+//---------------------------------------------------------------------------
