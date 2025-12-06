@@ -273,9 +273,10 @@ int labelWidth = canvas->TextWidth(c);
 int textX, textY;
 textX = x1 + labelWidth / 2;
 textY = y2;
-canvas->Brush->Color = clGray;
+canvas->Brush->Color = clWhite;
 canvas->TextOut(textX, textY, c);
 }
 }
 }
 //---------------------------------------------------------------------------
+
