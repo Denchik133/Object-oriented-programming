@@ -1,4 +1,4 @@
-﻿#include <iostream>
+#include <iostream>
 #include <fstream>
 
 using namespace std;
@@ -20,14 +20,14 @@ string encrypt(string original, int shift) {
 }
 
 void encrypt(istream& in, ostream& out, int shift) {
-	char c;
+	int c;
 	while ((c = in.get()) != EOF) {
 		out.put(c + shift);
 	}
 }
 
 void encrypt(istream& in, ostream& out) {
-	char c;
+	int c;
 	while ((c = in.get()) != EOF) {
 		out.put(c + 3);
 	}
@@ -45,6 +45,7 @@ bool encryptFile(const string& inputFile, const string& outputFile, int shift) {
 		return false;
 	}
 	encrypt(fin, fout, shift);
+	return true;
 }
 
 bool encryptFile(const string& inputFile, const string& outputFile) {
@@ -59,6 +60,7 @@ bool encryptFile(const string& inputFile, const string& outputFile) {
 		return false;
 	}
 	encrypt(fin, fout);
+	return true;
 }
 
 int main() {
