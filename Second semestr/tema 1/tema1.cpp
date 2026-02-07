@@ -12,8 +12,8 @@ void inputList(list<double>& list, int n) {
 }
 
 bool checkForMinusThree(const list<double>& list) {
-    for (auto i = list.begin(); i != list.end(); ++i) {
-        if (*i < -3) {
+    for (auto it = list.begin(); it != list.end(); ++it) {
+        if (*it < -3) {
             return true;
         }
     }
@@ -22,22 +22,22 @@ bool checkForMinusThree(const list<double>& list) {
 
 void listProcessing(list<double>& list, bool checkForMinusThree) {
     if (checkForMinusThree) {
-        for (auto i = list.begin(); i != list.end(); ++i) {
-            if (*i < 0) {
-                *i = (*i) * (*i);
+        for (auto it = list.begin(); it != list.end(); ++it) {
+            if (*it < 0) {
+                *it = (*it) * (*it);
             }
         }
     }
     else {
-        for (auto i = list.begin(); i != list.end(); ++i) {
-            *i *= 0.1;
+        for (auto it = list.begin(); it != list.end(); ++it) {
+            *it *= 0.1;
         }
     }
 }
 
 void listReverse(const list<double>& list) {
-    for (auto i = list.rbegin(); i != list.rend(); ++i) {
-        cout << *i << " ";
+    for (auto it = list.rbegin(); it != list.rend(); ++it) {
+        cout << *it << " ";
     }
 }
 
