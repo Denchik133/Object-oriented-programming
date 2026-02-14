@@ -9,6 +9,7 @@ class NumberEncryption {
 private:
     list<double> data;
     vector<char> encryptedData;
+    vector<char> cesarData;
 public:
     void inpupData(int n) {
         double x;
@@ -47,7 +48,7 @@ public:
             cout << *it << " ";
         }
     }
-    
+
     void encrypt() {
         encryptedData.clear();
         for (auto it = data.begin(); it != data.end(); ++it) {
@@ -66,10 +67,30 @@ public:
             cout << c << " ";
         }
     }
+
+void cesarEncrypt(int shift) {
+    cesarData.clear();
+    shift = ((shift % 26) + 26) % 26;
+    for (char c : encryptedData) {
+        if (c >= 'A' && c <= 'Z') {
+            char newChar = (c - 'A' + shift) % 26 + 'A';
+            cesarData.push_back(newChar);
+        }
+        else {
+            cesarData.push_back(c);
+        }
+    }
+}
+
+void printCesar() const {
+    for (char c : cesarData) {
+        cout << c << " ";
+    }
+}
 };
 
 int main() {
-    int n;
+    int n, shift;
     NumberEncryption enc;
     cout << "Введіть кількість елементів списку: ";
     cin >> n;
@@ -85,5 +106,10 @@ int main() {
     enc.encrypt();
     cout << "\nЗашифровані дані: ";
     enc.printEncryptedData();
+    cout << "\nВведіть зсув для шифру Цезаря: ";
+    cin >> shift;
+    enc.cesarEncrypt(shift);
+    cout << "Шифр Цезаря: ";
+    enc.printCesar();
     return 0;
 }
