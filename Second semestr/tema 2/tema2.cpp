@@ -1,52 +1,74 @@
 #include <iostream>
+#include <string>
 
 using namespace std;
 
 class Cipher {
 public:
-    virtual double encrypt(double value, int position) = 0;
+    virtual string encrypt(const string& text, int position) = 0;
     virtual ~Cipher() {}
 };
 
 class MirrorCipher : public Cipher {
 public:
-    double encrypt(double value, int position) override {
-        return -value + position;
+    string encrypt(const string& text, int position) override {
+        string result = text;
+
+        for (char& c : result) {
+            if (c >= 'A' && c <= 'Z')
+                c = 'Z' - (c - 'A');
+            else if (c >= 'a' && c <= 'z')
+                c = 'z' - (c - 'a');
+        }
+        return result;
     }
 };
 
 class ScaleCipher : public Cipher {
 public:
-    double encrypt(double value, int position) override {
-        return value * 2 + position;
+    string encrypt(const string& text, int position) override {
+        string result = text;
+
+        int shift = ((position % 26) + 26) % 26;
+
+        for (char& c : result) {
+            if (c >= 'A' && c <= 'Z')
+                c = (c - 'A' + shift) % 26 + 'A';
+            else if (c >= 'a' && c <= 'z')
+                c = (c - 'a' + shift) % 26 + 'a';
+        }
+        return result;
     }
 };
 
 bool readPosition(int& position) {
-    double posInput;
-    cin >> posInput;
-    if (cin.fail()) {
-        cin.clear();
-        cin.ignore(10000, '\n');
-        cout << "\033[31mНекоректне введення. Введіть число.\033[0m\n";
-        return false;
+    while (true) {
+        int posInput;
+        cin >> posInput;
+        while (cin.fail()) {
+            cin.clear();
+            cin.ignore(10000, '\n');
+            cout << "\033[31mНекоректне введення. Введіть число.\033[0m\n";
+            cin >> posInput;
+        }
+        if (posInput < 0 || posInput != static_cast<int>(posInput)) {
+            cout << "\033[31mПозиція має бути невід'ємним цілим числом.\033[0m\n";
+            continue;
+        }
+        position = static_cast<int>(posInput);
+        return true;
     }
-    if (posInput < 0 || posInput != static_cast<int>(posInput)) {
-        cout << "\033[31mПозиція має бути невід'ємним цілим числом.\033[0m\n";
-        return false;
-    }
-    position = static_cast<int>(posInput);
-    return true;
 }
 
 void task1() {
     cout << "\nЗавдання 1: Поліморфізм для двох класів (виклик через покажчик ->)";
-    double value;
+    string value;
     int position;
     while (true) {
-        cout << "\nВведіть значення для шифрування (Щоб завершити програму введіть 0): ";
-        cin >> value;
-        if (value == 0) {
+        cout << "\nВведіть текст для шифрування (0 - вихід): ";
+        cin.ignore();
+        getline(cin, value);
+        if (value == "0") {
             cout << "\nЗавершення роботи.";
             break;
         }
@@ -62,18 +84,19 @@ void task1() {
     }
 }
 
-void process(Cipher* cipher, double value, int position) {
+void process(Cipher* cipher, const string& value, int position) {
     cout << "\033[32mЗашифроване значення: " << cipher->encrypt(value, position) << "\033[0m\n";
 }
 
 void task2() {
     cout << "\n\nЗавдання 2: Поліморфізм для трьох класів (передача покажчика у функцію)\n";
-    double value;
+    string value;
     int position, choice;
     while (true) {
-        cout << "Введіть значення для шифрування (Щоб завершити програму введіть 0): ";
-        cin >> value;
-        if (value == 0) {
+        cout << "\nВведіть текст для шифрування (0 - вихід): ";
+        cin.ignore();
+        getline(cin, value);
+        if (value == "0") {
             cout << "\nЗавершення роботи.";
             break;
         }
@@ -104,19 +127,20 @@ void task2() {
 
 class EncryptionService {
 public:
-    void execute(Cipher& cipher, double value, int position) {
+    void execute(Cipher& cipher, const string& value, int position) {
         cout << "\033[32mЗашифроване значення: " << cipher.encrypt(value, position) << "\033[0m\n";
     }
 };
 
 void task3() {
     cout << "\n\nЗавдання 3: Поліморфізм для трьох класів (передача посилання у метод)\n";
-    double value;
+    string value;
     int position, choice;
     while (true) {
-        cout << "Введіть значення для шифрування (Щоб завершити програму введіть 0): ";
-        cin >> value;
-        if (value == 0) {
+        cout << "\nВведіть текст для шифрування (0 - вихід): ";
+        cin.ignore();
+        getline(cin, value);
+        if (value == "0") {
             cout << "\nЗавершення роботи.";
             break;
         }
