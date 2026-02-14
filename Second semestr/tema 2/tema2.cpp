@@ -93,7 +93,7 @@ void task2() {
     string value;
     int position, choice;
     while (true) {
-        cout << "\nВведіть текст для шифрування (0 - вихід): ";
+        cout << "Введіть текст для шифрування (0 - вихід): ";
         cin.ignore();
         getline(cin, value);
         if (value == "0") {
@@ -137,7 +137,7 @@ void task3() {
     string value;
     int position, choice;
     while (true) {
-        cout << "\nВведіть текст для шифрування (0 - вихід): ";
+        cout << "Введіть текст для шифрування (0 - вихід): ";
         cin.ignore();
         getline(cin, value);
         if (value == "0") {
