@@ -1,4 +1,4 @@
-﻿#include <vcl.h>
+#include <vcl.h>
 #pragma hdrstop
 #include "Unit1.h"
 #pragma package(smart_init)
@@ -88,4 +88,3 @@ void __fastcall TForm1::tmrWorkingTimer(TObject *Sender)
     Time_Working += 1./86400;
     Caption="Сервер працює "+TimeToStr(Time_Working);
 }
-
