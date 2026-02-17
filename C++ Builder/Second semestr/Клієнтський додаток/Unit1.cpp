@@ -1,4 +1,4 @@
-﻿#include <vcl.h>
+#include <vcl.h>
 #pragma hdrstop
 #include "Unit1.h"
 #pragma package(smart_init)
@@ -70,10 +70,15 @@ void __fastcall TForm1::Edit1KeyDown(TObject *Sender, WORD &Key, TShiftState Shi
 {
     if(Key==13)
     {
-        AnsiString msg=leNickname->Text+": "+Edit1->Text;
-        send(clientSocket,msg.c_str(),msg.Length(),0);
-        Edit1->Text="";
-    }
+
+	}
 }
 
 
+void __fastcall TForm1::BitBtn1Click(TObject *Sender)
+{
+AnsiString msg=leNickname->Text+": "+Edit1->Text;
+send(clientSocket,msg.c_str(),msg.Length(),0);
+Edit1->Text="";
+}
+//---------------------------------------------------------------------------
