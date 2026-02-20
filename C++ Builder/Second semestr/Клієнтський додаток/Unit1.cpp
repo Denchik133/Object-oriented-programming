@@ -32,6 +32,8 @@ void __fastcall TForm1::btnConnectClick(TObject *Sender)
         addr.sin_port = htons(StrToInt(lePort->Text));
 		addr.sin_addr.s_addr = inet_addr(AnsiString(leAddress->Text).c_str());
 		int res = connect(clientSocket, (sockaddr*)&addr, sizeof(addr));
+        u_long mode = 1;
+		ioctlsocket(clientSocket, FIONBIO, &mode);
 		if(res == 0) {
             AnsiString nick = "#" + leNickname->Text;
 			send(clientSocket, nick.c_str(), nick.Length(), 0);
@@ -56,12 +58,9 @@ void __fastcall TForm1::btnConnectClick(TObject *Sender)
 // ------------------------------------------------
 void __fastcall TForm1::tmrSocketTimer(TObject *Sender)
 {
-    u_long mode = 1;
-	ioctlsocket(clientSocket, FIONBIO, &mode);
-    int r = recv(clientSocket, buffer, 512, 0);
-    if(r > 0)
-    {
-        buffer[r] = 0;
+	int r = recv(clientSocket, buffer, 511, 0);
+	if(r>0) {
+        buffer[r]=0;
         mLog->Lines->Add(AnsiString(buffer));
     }
 }
