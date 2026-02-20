@@ -53,33 +53,44 @@ void __fastcall TForm1::btnSwitchClick(TObject *Sender)
 void __fastcall TForm1::tmrSocketTimer(TObject *Sender)
 {
     fd_set readfds;
-	FD_ZERO(&readfds);
+    FD_ZERO(&readfds);
 	FD_SET(serverSocket,&readfds);
 	for(int i=0;i<clientCount;i++) {
 		FD_SET(clients[i],&readfds);
-    }
+	}
 	timeval tv={0,0};
 	if(select(0,&readfds,NULL,NULL,&tv)>0) {
 		if(FD_ISSET(serverSocket,&readfds)) {
-            SOCKET client=accept(serverSocket,NULL,NULL);
-			clients[clientCount++]=client;
-            lbUsers->Items->Add("User"+IntToStr(clientCount));
-            mLog->Lines->Add("Новий клієнт");
+			if(clientCount < MAX_CLIENTS) {
+                SOCKET client=accept(serverSocket,NULL,NULL);
+				clients[clientCount++]=client;
+				lbUsers->Items->Add("User"+IntToStr(clientCount));
+                mLog->Lines->Add("Новий клієнт");
+            }
 		}
 		for(int i=0;i<clientCount;i++) {
 			if(FD_ISSET(clients[i],&readfds)) {
-                int r=recv(clients[i],buffer,512,0);
-				if(r>0) {
-                	buffer[r]=0;
-					AnsiString msg(buffer);
-					mLog->Lines->Add(msg);
-					for(int j=0;j<clientCount;j++) {
-						send(clients[j],buffer,r,0);
+				int r=recv(clients[i],buffer,511,0);
+				if(r<=0) {
+					closesocket(clients[i]);
+					for(int j=i;j<clientCount-1;j++) {
+						clients[j]=clients[j+1];
 					}
-                }
+                    clientCount--;
+                    lbUsers->Items->Delete(i);
+                    mLog->Lines->Add("Клієнт відключився");
+                    i--;
+                    continue;
+				}
+                buffer[r]=0;
+				AnsiString msg(buffer);
+				mLog->Lines->Add(msg);
+				for(int j=0;j<clientCount;j++) {
+					send(clients[j],buffer,r,0);
+				}
             }
-        }
-    }
+		}
+	}
 }
 
 // ------------------------------------------------
