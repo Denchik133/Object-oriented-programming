@@ -2,33 +2,66 @@
 
 using namespace std;
 
-struct Distance {
-    int feet;
-    double inches;
-    void input(const string& text) {
+class InputValidator {
+public:
+
+    static bool isInteger(double x) {
+        return x == static_cast<int>(x);
+    }
+
+    static int readInt(const string& text) {
+        while (true) {
+            cout << text;
+            double temp;
+            cin >> temp;
+            bool ok = !cin.fail() && isInteger(temp);
+            if (!ok) {
+                cout << "\033[31mПотрібно вводити ціле число.\033[0m\n";
+                cin.clear();
+                cin.ignore(10000, '\n');
+                continue;
+            }
+            return static_cast<int>(temp);
+        }
+    }
+
+    static int readPower(double n) {
+        while (true) {
+            double temp;
+            cin >> temp;
+            bool valid = !cin.fail() && isInteger(temp) && !(n == 0 && temp < 0);
+            if (!valid) {
+                cout << "\033[31mНекоректний степінь. Спробуйте ще раз.\033[0m\n";
+                cin.clear();
+                cin.ignore(10000, '\n');
+                continue;
+            }
+            return static_cast<int>(temp);
+        }
+    }
+
+    static void readDistance(int& feet, double& inches, const string& text) {
         while (true) {
             cout << text;
             cout << "\n feet: ";
             cin >> feet;
             cout << " inches: ";
             cin >> inches;
-            if (cin.fail()) {
-                cout << "\033[31mПомилка введення. Спробуйте ще раз.\033[0m";
+            bool ok = !cin.fail() && inches >= 0 && inches < 12;
+            if (!ok) {
+                cout << "\033[31mНекоректні дані.\033[0m\n";
                 cin.clear();
                 cin.ignore(10000, '\n');
-                continue;
-            }
-            if (inches < 0) {
-                cout << "\033[31mДюйми не можуть бути від'ємними. Спробуйте ще раз.\033[0m";
-                continue;
-            }
-            if (inches >= 12) {
-                cout << "\033[31mДюйми повинні бути менше 12. Спробуйте ще раз.\033[0m";
                 continue;
             }
             break;
         }
     }
+};
+
+struct Distance {
+    int feet;
+    double inches;
 };
 
 class PowerTask {
@@ -44,7 +77,6 @@ public:
     static void run() {
         cout << "\nЗавдання 1: функція power()\n";
         double n;
-        int p;
         char choice;
         cout << "Введіть число n: ";
         cin >> n;
@@ -52,29 +84,7 @@ public:
         cin >> choice;
         if (choice == 'y' || choice == 'Y') {
             cout << "Введіть степінь p: ";
-            while (true) {
-                double temp;
-                cin >> temp;
-                if (cin.fail()) {
-                    cout << "\033[31mПотрібно вводити ціле число. Спробуйте ще раз.\033[0m\n";
-                    cin.clear();
-                    cin.ignore(10000, '\n');
-                    cout << "Введіть степінь p: ";
-                    continue;
-                }
-                if (temp != static_cast<int>(temp)) {
-                    cout << "\033[31mСтепінь має бути цілим числом. Спробуйте ще раз.\033[0m\n";
-                    cout << "Введіть степінь p: ";
-                    continue;
-                }
-                p = static_cast<int>(temp);
-                if (n == 0 && p < 0) {
-                    cout << "\033[31m0 не можна підносити у від'ємний степінь. Спробуйте ще раз.\033[0m\n";
-                    cout << "Введіть степінь p: ";
-                    continue;
-                }
-                break;
-            }
+            int p = InputValidator::readPower(n);
             cout << "Результат: " << power(n, p);
         }
         else {
@@ -86,37 +96,14 @@ public:
 class ZeroSmallerTask {
 public:
     static void zeroSmaller(int& a, int& b) {
-        if (a < b) {
-            a = 0;
-        }
-        else if (b < a) {
-            b = 0;
-        }
+        if (a < b) a = 0;
+        else if (b < a) b = 0;
     }
 
     static void run() {
         cout << "\n\nЗавдання 2: функція zeroSmaller()\n";
-        int a, b;
-        cout << "Введіть два цілі числа: ";
-        while (true) {
-            double tempA, tempB;
-            cin >> tempA >> tempB;
-            if (cin.fail()) {
-                cout << "\033[31mПомилка! Потрібно вводити тільки цілі числа. Спробуйте ще раз.\033[0m";
-                cin.clear();
-                cin.ignore(10000, '\n');
-                cout << "Введіть два цілі числа: ";
-                continue;
-            }
-            if (tempA != static_cast<int>(tempA) || tempB != static_cast<int>(tempB)) {
-                cout << "\033[31mПотрібно вводити тільки цілі числа. Спробуйте ще раз.\033[0m\n";
-                cout << "Введіть два цілі числа: ";
-                continue;
-            }
-            a = static_cast<int>(tempA);
-            b = static_cast<int>(tempB);
-            break;
-        }
+        int a = InputValidator::readInt("Введіть a: ");
+        int b = InputValidator::readInt("Введіть b: ");
         zeroSmaller(a, b);
         cout << "Результат після виклику функції:\n";
         cout << "a = " << a << ", b = " << b;
@@ -128,20 +115,15 @@ public:
     static Distance largestDistance(Distance d1, Distance d2) {
         double total1 = d1.feet * 12 + d1.inches;
         double total2 = d2.feet * 12 + d2.inches;
-        if (total1 > total2) {
-            return d1;
-        }
-        else {
-            return d2;
-        }
+        return (total1 > total2) ? d1 : d2;
     }
 
     static void run() {
         cout << "\n\nЗавдання 3: найбільша дистанція\n";
-        Distance d1, d2, result;
-        d1.input("Введіть першу відстань (feet inches): ");
-        d2.input("Введіть другу відстань (feet inches): ");
-        result = largestDistance(d1, d2);
+        Distance d1, d2;
+        InputValidator::readDistance(d1.feet, d1.inches, "Введіть першу відстань:");
+        InputValidator::readDistance(d2.feet, d2.inches, "Введіть другу відстань:");
+        Distance result = largestDistance(d1, d2);
         cout << "\nНайбільша відстань: " << result.feet << " футів " << result.inches << " дюймів";
     }
 };
