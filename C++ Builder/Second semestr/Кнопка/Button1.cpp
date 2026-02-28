@@ -7,10 +7,6 @@
 #include "Button1.h"
 #pragma package(smart_init)
 //---------------------------------------------------------------------------
-// ValidCtrCheck is used to assure that the components created do not have
-// any pure virtual functions.
-//
-
 static inline void ValidCtrCheck(TBtnNClick *)
 {
 	new TBtnNClick(NULL);
@@ -38,3 +34,4 @@ namespace Button1
 	}
 }
 //---------------------------------------------------------------------------
+
