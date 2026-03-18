@@ -1,24 +1,15 @@
-﻿#include <iostream>
+#include <iostream>
 #include <cmath>
 #include <stdexcept>
 
 using namespace std;
 
 double F(double x) {
-    if (x <= 0) {
-        return 0;
-    }
-    if (x > 0 && x <= 1) {
-        return (x * x + x) / 2;
-    }
-    return 1;
+    return (x <= 0) ? 0 : ((x <= 1) ? (x * x + x) / 2 : 1);
 }
 
 double density(double x) {
-    if (x > 0 && x <= 1) {
-        return x + 0.5;
-    }
-    return 0;
+    return (x > 0 && x <= 1) ? (x + 0.5) : 0;
 }
 
 int main() {
@@ -28,10 +19,12 @@ int main() {
         cin >> alpha;
         cout << "Введіть beta: ";
         cin >> beta;
-        if (cin.fail()) {
+        bool validInput = !cin.fail();
+        bool validRange = (alpha <= beta);
+        if (!validInput) {
             throw invalid_argument("Помилка введення");
         }
-        if (alpha > beta) {
+        if (!validRange) {
             throw invalid_argument("alpha повинно бути <= beta");
         }
         double probability = F(beta) - F(alpha);
