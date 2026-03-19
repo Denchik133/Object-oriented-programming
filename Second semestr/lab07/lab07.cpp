@@ -58,8 +58,7 @@ void processArray(Chislo* obj, Matrix& m, int shift) {
     for (int i = 0; i < obj->getSize(); i++) {
         double value = m.array[i];
         if (floor(value) != value) {
-            cout << "Число: " << value
-                << " | Факторіал не визначений (число має бути цілим) | (шифровано): -\n";
+            cout << "Число: " << value << " | Факторіал не визначений (число має бути цілим) | (шифровано): -\n";
             continue;
         }
         long intValue = (long)value;
