@@ -1,7 +1,8 @@
-﻿#include <iostream>
+#include <iostream>
 #include <vector>
 #include <stdexcept>
 #include <iomanip>
+#include <algorithm>
 
 using namespace std;
 
@@ -31,6 +32,15 @@ int main() {
                     throw invalid_argument("Помилка введення ni");
                 }
                 total += n[i];
+            }
+            vector<pair<double, int>> data;
+            for (int i = 0; i < k; i++) {
+                data.push_back({ x[i], n[i] });
+            }
+            sort(data.begin(), data.end());
+            for (int i = 0; i < k; i++) {
+                x[i] = data[i].first;
+                n[i] = data[i].second;
             }
             double mean = 0;
             for (int i = 0; i < k; i++) {
