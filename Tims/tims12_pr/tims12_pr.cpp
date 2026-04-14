@@ -1,4 +1,4 @@
-﻿#include <iostream>
+#include <iostream>
 #include <vector>
 #include <map>
 #include <algorithm>
@@ -88,6 +88,32 @@ void drawEmpiricalFull(map<double, int>& freq, int n) {
     cout << "\n       x\n";
 }
 
+void linearRegression(map<double, double>& relFreq) {
+    vector<double> x, y;
+    for (auto& p : relFreq) {
+        x.push_back(p.first);
+        y.push_back(p.second);
+    }
+    int n = x.size();
+    double sumX = 0, sumY = 0, sumXY = 0, sumX2 = 0;
+    for (int i = 0; i < n; i++) {
+        sumX += x[i];
+        sumY += y[i];
+        sumXY += x[i] * y[i];
+        sumX2 += x[i] * x[i];
+    }
+    double a = (n * sumXY - sumX * sumY) / (n * sumX2 - sumX * sumX);
+    double b = (sumY - a * sumX) / n;
+    cout << "\nЛінійна регресійна модель:\n";
+    cout << "y = " << a << " * x + " << b << "\n";
+    cout << "\nТаблиця (реальне vs модель):\n";
+    cout << "x\tp_i\ty(x)\n";
+    for (int i = 0; i < n; i++) {
+        double y_pred = a * x[i] + b;
+        cout << x[i] << "\t" << y[i] << "\t" << y_pred << "\n";
+    }
+}
+
 int main() {
     while (true) {
         try {
@@ -123,6 +149,7 @@ int main() {
             }
             drawPolygonFull(relFreq);
             drawEmpiricalFull(freq, n);
+            linearRegression(relFreq);
             break;
         }
         catch (exception& e) {
